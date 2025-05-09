@@ -3,6 +3,7 @@ import streamlit as st
 import pandas as pd
 
 df = pd.read_csv("bt_batch_01.csv", encoding="utf-8-sig")
+df.columns = [col.strip() for col in df.columns]  # 去除列名首尾空格
 
 st.set_page_config(page_title="Backtranslation Rating - Rater 01", layout="centered")
 st.title("📝 Simplification Back-Translation Evaluation - Rater 01")
