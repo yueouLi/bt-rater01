@@ -13,8 +13,8 @@ ratings = []
 for idx, row in df.iterrows():
     st.markdown(f"### 🔢 Sample {idx+1}")
     st.markdown(f"**🟩 Source:**  \n{row['source']}")
-    st.markdown(f"**🇩🇪 German Back-Translation:**  \n{row['back_translated_text(de)']}")
-    st.markdown(f"**🇨🇳 Chinese Back-Translation:**  \n{row['back_translated_text(zh)']}")
+    st.markdown(f"**🇩🇪 German Back-Translation:**  \n{row['bt_de']}")
+    st.markdown(f"**🇨🇳 Chinese Back-Translation:**  \n{row['bt_zh']}")
 
     st.markdown("**Rate German Version:**")
     g_meaning = st.slider(f"Meaning (German) [{idx}]", 1, 5, 3, key=f"gm{idx}")
@@ -32,8 +32,8 @@ for idx, row in df.iterrows():
         "rater_id": rater_id,
         "sample_id": idx + 1,
         "source": row["source"],
-        "bt_de": row["back_translated_text(de)"],
-        "bt_zh": row["back_translated_text(zh)"],
+        "bt_de": row["bt_de"],
+        "bt_zh": row["bt_zh"],
         "g_meaning": g_meaning,
         "g_fluency": g_fluency,
         "g_simplicity": g_simplicity,
