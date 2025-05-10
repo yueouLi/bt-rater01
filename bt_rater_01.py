@@ -83,7 +83,6 @@ This study introduces a human evaluation protocol for **multilingual sentence si
 df = pd.read_csv("bt_batch_01.csv", encoding="utf-8-sig")
 df.columns = [col.strip() for col in df.columns]  # 去除列名首尾空格
 
-df = pd.read_csv("bt_batch_07.csv", encoding="utf-8-sig")
 
 
 # 分页和状态保存
