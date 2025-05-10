@@ -2,6 +2,11 @@ import streamlit as st
 import pandas as pd
 import io
 
+
+
+rater_id = "rater01"
+ratings = []
+
 # 设置页面标题和布局
 st.set_page_config(page_title="Backtranslation Rating - Rater 01", layout="centered")
 st.title("📝 Simplification Back-Translation Evaluation - Rater 01")
@@ -76,8 +81,10 @@ This study introduces a human evaluation protocol for **multilingual sentence si
 
 # 读取 CSV 文件
 df = pd.read_csv("bt_batch_01.csv", encoding="utf-8-sig")
+df.columns = [col.strip() for col in df.columns]  # 去除列名首尾空格
 
-rater_id = "rater01"
+df = pd.read_csv("bt_batch_07.csv", encoding="utf-8-sig")
+
 
 # 分页和状态保存
 samples_per_page = 10
@@ -147,3 +154,6 @@ with col3:
             file_name=f"bt_ratings_{rater_id}.csv",
             mime="text/csv"
         )
+
+
+
