@@ -85,18 +85,8 @@ df.columns = [col.strip() for col in df.columns]  # 去除列名首尾空格
 
 
 
-# 分页和状态保存
-samples_per_page = 10
-if "page" not in st.session_state:
-    st.session_state.page = 0
-if "ratings_data" not in st.session_state:
-    st.session_state.ratings_data = {}
-
-start_idx = st.session_state.page * samples_per_page
-end_idx = min((st.session_state.page + 1) * samples_per_page, len(df))
-
 # 展示样本
-for idx in range(start_idx, end_idx):
+for idx, row in df.iterrows():
     row = df.iloc[idx]
     st.markdown(f"### 🔢 Sample {idx + 1}")
     st.markdown(f"**🟩 Source:**  \n{row['source']}")
