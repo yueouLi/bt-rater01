@@ -83,6 +83,9 @@ This study introduces a human evaluation protocol for **multilingual sentence si
 df = pd.read_csv("bt_batch_01.csv", encoding="utf-8-sig")
 df.columns = [col.strip() for col in df.columns]  # 去除列名首尾空格
 
+# 初始化 session_state 中的评分数据字典（必须保留）
+if "ratings_data" not in st.session_state:
+    st.session_state.ratings_data = {}
 
 
 # 展示样本
