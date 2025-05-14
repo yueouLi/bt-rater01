@@ -7,6 +7,7 @@ st.title("📝 Simplification Back-Translation Evaluation - Rater 01")
 
 # 读取 CSV 文件
 df = pd.read_csv("bt_batch_01.csv", encoding="utf-8-sig")
+df.columns = [col.strip() for col in df.columns]
 
 rater_id = "rater01"
 
