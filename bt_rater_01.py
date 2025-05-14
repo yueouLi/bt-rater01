@@ -1,17 +1,20 @@
 import streamlit as st
 import pandas as pd
-import io
-
-
-
-rater_id = "rater01"
-ratings = []
 
 # 设置页面标题和布局
 st.set_page_config(page_title="Backtranslation Rating - Rater 01", layout="centered")
 st.title("📝 Simplification Back-Translation Evaluation - Rater 01")
 
-    
+# 读取 CSV 文件
+df = pd.read_csv("bt_batch_01.csv", encoding="utf-8-sig")
+
+rater_id = "rater01"
+
+# 初始化评分记录
+if "ratings_data" not in st.session_state:
+    st.session_state.ratings_data = {}
+
+# 打开评分准则说明
 with st.expander("📘 View Manual Scoring Guidelines"):
     st.markdown("""
 ### 🎯 **Manual Scoring Protocol (1–5 Scale)**
@@ -77,41 +80,32 @@ This study introduces a human evaluation protocol for **multilingual sentence si
 🔎 _Diversity ≠ quality. Use only when multiple references exist._
     """)
 
-
-
-# 读取 CSV 文件
-df = pd.read_csv("bt_batch_01.csv", encoding="utf-8-sig")
-df.columns = [col.strip() for col in df.columns]  # 去除列名首尾空格
-
-# 初始化 session_state 中的评分数据字典（必须保留）
-if "ratings_data" not in st.session_state:
-    st.session_state.ratings_data = {}
-
-
-# 展示样本
+# 遍历全部样本（无分页）
 for idx, row in df.iterrows():
-    row = df.iloc[idx]
-    st.markdown(f"### 🔢 Sample {idx + 1}")
-    st.markdown(f"**🟩 Source:**  \n{row['source']}")
+    st.markdown(f"### 🔢 Sentence {idx + 1}")
+    st.markdown(f"**🟩 Complex Source:**  \n{row['source_complex']}")
     st.markdown(f"**🦁Sprache 1 Back-Translation:**  \n{row['bt_de']}")
-   
-
     g_meaning = st.slider(f"Meaning (🦁) [{idx}]", 1, 5, 3, key=f"gm{idx}")
     g_fluency = st.slider(f"Fluency (🦁) [{idx}]", 1, 5, 3, key=f"gf{idx}")
     g_simplicity = st.slider(f"Simplicity (🦁) [{idx}]", 1, 5, 3, key=f"gs{idx}")
+    st.markdown(f"**🟩 Simplify Source:**  \n{row['source_simplification']}")
+    st.markdown(f"**🦁Sprache 1 Back-Translation:**  \n{row['bt_de']}")
     g_diversity = st.slider(f"Diversity (🦁) [{idx}]", 1, 5, 3, key=f"gd{idx}")
-    
-    st.markdown(f"**🟩 Source:**  \n{row['source']}")
+
+    st.markdown(f"**🟩 Complex Source:**  \n{row['source_complex']}")
     st.markdown(f"**🐮Sprache 2 Back-Translation:**  \n{row['bt_zh']}")
     c_meaning = st.slider(f"Meaning (🐮) [{idx}]", 1, 5, 3, key=f"cm{idx}")
     c_fluency = st.slider(f"Fluency (🐮) [{idx}]", 1, 5, 3, key=f"cf{idx}")
     c_simplicity = st.slider(f"Simplicity (🐮) [{idx}]", 1, 5, 3, key=f"cs{idx}")
+    st.markdown(f"**🟩 Simplify Source:**  \n{row['source_simplification']}")
+    st.markdown(f"**🐮Sprache 2 Back-Translation:**  \n{row['bt_zh']}")
     c_diversity = st.slider(f"Diversity (🐮) [{idx}]", 1, 5, 3, key=f"cd{idx}")
 
     st.session_state.ratings_data[idx] = {
         "rater_id": rater_id,
         "sample_id": idx + 1,
-        "source": row["source"],
+        "source_complex": row["source_complex"],
+        "source_simplification": row["source_simplification"],
         "bt_de": row["bt_de"],
         "bt_zh": row["bt_zh"],
         "g_meaning": g_meaning,
@@ -124,28 +118,17 @@ for idx, row in df.iterrows():
         "c_diversity": c_diversity,
     }
 
-# 显示进度
+# 显示评分进度
 st.markdown("---")
 st.markdown(f"📊 Progress: {len(st.session_state.ratings_data)} / {len(df)} samples rated.")
 
-# 翻页控制
-col1, col2, col3 = st.columns([1, 1, 1])
-with col1:
-    if st.button("⬅️ Previous") and st.session_state.page > 0:
-        st.session_state.page -= 1
-with col2:
-    if st.button("➡️ Next") and end_idx < len(df):
-        st.session_state.page += 1
-with col3:
-    if st.button("⬇️ Download CSV"):
-        all_ratings_df = pd.DataFrame.from_dict(st.session_state.ratings_data, orient="index")
-        csv_bytes = all_ratings_df.to_csv(index=False, encoding="utf-8-sig").encode("utf-8-sig")
-        st.download_button(
-            label="📥 Click here to download",
-            data=csv_bytes,
-            file_name=f"bt_ratings_{rater_id}.csv",
-            mime="text/csv"
-        )
-
-
-
+# 下载按钮
+if st.button("⬇️ Download Ratings CSV"):
+    all_ratings_df = pd.DataFrame.from_dict(st.session_state.ratings_data, orient="index")
+    csv_bytes = all_ratings_df.to_csv(index=False, encoding="utf-8-sig").encode("utf-8-sig")
+    st.download_button(
+        label="📥 Click here to download",
+        data=csv_bytes,
+        file_name=f"bt_ratings_{rater_id}.csv",
+        mime="text/csv"
+    )
