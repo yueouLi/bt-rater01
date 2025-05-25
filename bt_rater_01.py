@@ -84,29 +84,29 @@ This study introduces a human evaluation protocol for **multilingual sentence si
 # 遍历全部样本（无分页）
 for idx, row in df.iterrows():
     st.markdown(f"### 🔢 Sentence {idx + 1}")
-    st.markdown(f"**🟩 Complex Source:**  \n{row['source_complex']}")
+    st.markdown(f"**🟩 Complex Source:**  \n{row['orig_sent']}")
     st.markdown(f"**🦁Sprache 1 Back-Translation:**  \n{row['bt_de']}")
     g_meaning = st.slider(f"Meaning (🦁) [{idx}]", 1, 5, 3, key=f"gm{idx}")
     g_fluency = st.slider(f"Fluency (🦁) [{idx}]", 1, 5, 3, key=f"gf{idx}")
     g_simplicity = st.slider(f"Simplicity (🦁) [{idx}]", 1, 5, 3, key=f"gs{idx}")
-    st.markdown(f"**🟩 Simplify Source:**  \n{row['source_simplification']}")
+    st.markdown(f"**🟩 Simplify Source:**  \n{row['ref_1']}")
     st.markdown(f"**🦁Sprache 1 Back-Translation:**  \n{row['bt_de']}")
     g_diversity = st.slider(f"Diversity (🦁) [{idx}]", 1, 5, 3, key=f"gd{idx}")
 
-    st.markdown(f"**🟩 Complex Source:**  \n{row['source_complex']}")
+    st.markdown(f"**🟩 Complex Source:**  \n{row['orig_sent']}")
     st.markdown(f"**🐮Sprache 2 Back-Translation:**  \n{row['bt_zh']}")
     c_meaning = st.slider(f"Meaning (🐮) [{idx}]", 1, 5, 3, key=f"cm{idx}")
     c_fluency = st.slider(f"Fluency (🐮) [{idx}]", 1, 5, 3, key=f"cf{idx}")
     c_simplicity = st.slider(f"Simplicity (🐮) [{idx}]", 1, 5, 3, key=f"cs{idx}")
-    st.markdown(f"**🟩 Simplify Source:**  \n{row['source_simplification']}")
+    st.markdown(f"**🟩 Simplify Source:**  \n{row['ref_1']}")
     st.markdown(f"**🐮Sprache 2 Back-Translation:**  \n{row['bt_zh']}")
     c_diversity = st.slider(f"Diversity (🐮) [{idx}]", 1, 5, 3, key=f"cd{idx}")
 
     st.session_state.ratings_data[idx] = {
         "rater_id": rater_id,
         "sample_id": idx + 1,
-        "source_complex": row["source_complex"],
-        "source_simplification": row["source_simplification"],
+        "orig_sent": row["orig_sent"],
+        "ref_1": row["ref_1"],
         "bt_de": row["bt_de"],
         "bt_zh": row["bt_zh"],
         "g_meaning": g_meaning,
